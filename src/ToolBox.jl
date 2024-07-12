@@ -71,36 +71,6 @@ end
 
 
 
-"""
-    research_dir()
-
-Return absolute path to primary directory of research project. Throw error if no such path exists.
-
-CAUTION: Make sure this path is kept up to date if the directory is moved, altered, or folder names are changed.
-
-See also [`plot_tempdir`](@ref)
-"""
-function research_dir()
-    path = raw"C:/Users/phfit/Desktop/Summer 2024/Research/"
-    isdir(path) ? string(path) : error("$(path) could not be found.\nPlease update variable `path` in function $(string(nameof(research_dir)))()\n    @ \"$(functionloc(research_dir)[1])\":$(functionloc(research_dir)[2])")
-end
-
-
-"""
-    plot_tempdir()
-
-Return absolute path to "~/plotlib/temp" directory. Throw error if no such path exists.
-
-CAUTION: Make sure this path is kept up to date if the directory is moved, altered, or folder names are changed.
-
-See also [`research_dir`](@ref)
-"""
-function plot_tempdir()
-    path = string(research_dir(), raw"/plotlib/temp/")
-    isdir(path) ? string(path) : error("$(path) could not be found.\nPlease update variable `path` in function $(string(nameof(plot_tempdir)))()\n    @ \"$(functionloc(plot_tempdir)[1])\":$(functionloc(plot_tempdir)[2])")
-end
-
-
 
 ### Particle Smearing
 """

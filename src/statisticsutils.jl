@@ -1,3 +1,6 @@
+# TODO add full docstrings to all functions
+
+
 # TODO: add `nothing` bound functionality.
 # TODO: consider renaming to something more clear.
 # cuts from the lower edge of x1 and the upper edge of x2. i.e. cut does not include the bin starting at x2 or the bin ending at x1.
@@ -12,7 +15,7 @@ function efficiency(sample::Vector{Hist1D{T}}, signal_index::Int64,
     nevents_signal_cut = integral(restricted_signal_hist)
 
     # calculate the total number of signal events.
-    nevents_signal_total = nentries(sample[signal_index])
+    nevents_signal_total = integral(sample[signal_index])
 
     # compute efficiency
     _efficiency = nevents_signal_cut / nevents_signal_total
@@ -56,8 +59,9 @@ function purity(sample::Vector{Hist1D{T}}, signal_index::Int64, x1::Number, x2::
     return purity
 end
 
+# FIXME when one of the histograms in the vector is the product of adding two histograms together, the function will fail. investigate and fix.
 "Compute maximum possible purity of the given sample with respect to the given signal."
-function max_purity(sample::Vector{Hist1D{T}}, signal_index::Int64;
+function maxpurity(sample::Vector{Hist1D{T}}, signal_index::Int64;
                     return_edges::Bool=false, print_output::Bool=true) where {T}
 
     highest_purity_value = 0.0
@@ -102,7 +106,7 @@ end
 function cut_stats(sample::Vector{Hist1D{T}}, signal_index::Int64,
                     target_purity::Float64; print_output::Bool=true) where {T}
 
-    _max = PhyLib.max_purity(sample, signal_index; return_edges=false, print_output=false)
+    _max = maxpurity(sample, signal_index; return_edges=false, print_output=false)
 
     target_purity > _max && error("Keyword argument \"target_purity\" must 
         be below the max purity for the given sample and signal.")
@@ -123,6 +127,7 @@ function cut_stats(sample::Vector{Hist1D{T}}, signal_index::Int64,
     return (purity = purity, efficiency = eff, bounds = bounds, width = width)
 end
 
+# TODO change function name to optimizecut()
 # This function does not account for overflow bins.
 function best_cut_purity(sample::Vector{Hist1D{T}}, signal_index::Int64,
                         target_purity::Float64; print_output::Bool=true) where {T}

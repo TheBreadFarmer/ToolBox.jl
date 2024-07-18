@@ -4,7 +4,11 @@
 # TODO: add `nothing` bound functionality.
 # TODO: consider renaming to something more clear.
 # cuts from the lower edge of x1 and the upper edge of x2. i.e. cut does not include the bin starting at x2 or the bin ending at x1.
-"Compute the efficiency of selecting signal events from a larger sample for the given cut."
+"""
+    efficiency(sample, signal_index, x1, x2; print_output)
+
+Compute the efficiency of selecting signal events from a larger sample for the given cut.
+"""
 function efficiency(sample::Vector{Hist1D{T}}, signal_index::Int64,
                     x1::Number, x2::Number; print_output::Bool=true) where {T}
 
@@ -31,7 +35,11 @@ end
 # TODO: add `nothing` bound functionality.
 # TODO: consider renaming to something more clear.
 # cuts from the lower edge of x1 and the upper edge of x2. i.e. cut does not include the bin starting at x2 or the bin ending at x1.
-"Compute the purity of selected events from given sample events with respect to given signal events."
+"""
+    purity(sample, signal_index, x1, x2; print_output)
+
+Compute the purity of selected events from given sample events with respect to given signal events.
+"""
 function purity(sample::Vector{Hist1D{T}}, signal_index::Int64, x1::Number, x2::Number;
                 print_output::Bool=true) where {T}
 
@@ -60,7 +68,11 @@ function purity(sample::Vector{Hist1D{T}}, signal_index::Int64, x1::Number, x2::
 end
 
 # FIXME when one of the histograms in the vector is the product of adding two histograms together, the function will fail. investigate and fix.
-"Compute maximum possible purity of the given sample with respect to the given signal."
+"""
+    maxpurity(sample, signal_index; return_edges, print_output)
+
+Compute maximum possible purity of the given sample with respect to the given signal.
+"""
 function maxpurity(sample::Vector{Hist1D{T}}, signal_index::Int64;
                     return_edges::Bool=false, print_output::Bool=true) where {T}
 
@@ -102,14 +114,18 @@ end
 
 # Optionally supply a lower and upper bound as fourth and fith argument to preview stats within that bound.
 # If no bounds are passed, it will compute the best bounds internaly.
-"Returns useful stats regarding cuting a sample by W with respect to a given signal."
+"""
+    cut_stats(sample, signal_index, target_purity; print_output)
+
+Returns useful stats regarding cuting a sample by W with respect to a given signal.
+"""
 function cut_stats(sample::Vector{Hist1D{T}}, signal_index::Int64,
                     target_purity::Float64; print_output::Bool=true) where {T}
 
     _max = maxpurity(sample, signal_index; return_edges=false, print_output=false)
 
     target_purity > _max && error("Keyword argument \"target_purity\" must 
-        be below the max purity for the given sample and signal.")
+        be below the max purity for the given sample and signal.") # TODO break this out into a seperate function and add to any function where a purity selection is required.
 
     purity, bounds = best_cut_purity(sample, signal_index, target_purity; print_output=false)
 
@@ -129,6 +145,9 @@ end
 
 # TODO change function name to optimizecut()
 # This function does not account for overflow bins.
+"""
+    best_cut_purity(sample, signal_index, target_purity; print_output)
+"""
 function best_cut_purity(sample::Vector{Hist1D{T}}, signal_index::Int64,
                         target_purity::Float64; print_output::Bool=true) where {T}
 

@@ -4,7 +4,7 @@
 
 Return smeared reconstructed particle 4-momentum. Resolution is the % resolution in decimal form.
 """
-function smear(particle::LorentzVector, resolution::Float64=0.0005)
+function smear(particle::LorentzVector, resolution::Float64=0.005)
     # compute particles true total momentum.
     p_true = LorentzVectorHEP.mag(particle) # units of GeV
 

@@ -68,6 +68,7 @@ function purity(sample::Vector{Hist1D{T}}, signal_index::Int64, x1::Number, x2::
 end
 
 # FIXME when one of the histograms in the vector is the product of adding two histograms together, the function will fail. investigate and fix.
+# TODO URGENT!! DOCUMENT THIS FUNCTION
 """
     maxpurity(sample, signal_index; return_edges, print_output)
 

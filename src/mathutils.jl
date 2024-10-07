@@ -1,7 +1,7 @@
 """
     W_approx(l_in::LorentzVector, l_out::LorentzVector; Mn=0.93891875433, Eb=0.0315)
 
-Compute the approximate hadronic invariant mass W.
+Compute the hadronic invariant mass W using the approximation that the nucleon remains at rest.
 
 ```math
 W = √{ -(-q)² + 2⋅(Mn-Eb)⋅ω + (Mn-Eb)² }
@@ -18,13 +18,14 @@ is the energy (in GeV) required to kick a nucleon out of the nucleus (defaults t
 
 See also [`W_exact`](@ref)
 """
-function W_approx(l_in::LorentzVector, l_out::LorentzVector; Mn::Float64=0.93891875433, Eb::Float64=0.0)
+function W_approx(l_in::LorentzVector, l_out::LorentzVector; Mn::Float64=AVG_NUCLEON_MASS, Eb::Float64=BINDING_ENERGY)
     # calculate W using approximation. if the argument of sqrt() is negative, return 0.0 instead.
     # `mass(l_in - l_out)^2` is equivalent to Q^2.
     W = try sqrt(-mass(l_in - l_out)^2 + 2*(Mn-Eb)*(energy(l_in) - energy(l_out)) + (Mn-Eb)^2) catch; 0.0 end # units of GeV
 
     return W
 end
+# TODO find Eb calls in code and replace with default value.
 
 """
     W_exact(l_in::LorentzVector, l_out::LorentzVector, n_in::LorentzVector)
@@ -50,4 +51,16 @@ function W_exact(l_in::LorentzVector, l_out::LorentzVector, n_in::LorentzVector)
 
 
     return W
+end
+
+
+
+
+"""
+Compute cosine of the angle between two vectors.
+"""
+function cosbetween(v::LorentzVector,u::LorentzVector)
+    v′ = SpatialVector(v)
+    u′ = SpatialVector(u)
+    return dot(v′, u′) / (norm(v′) * norm(u′))
 end

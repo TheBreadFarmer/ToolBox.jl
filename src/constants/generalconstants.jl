@@ -1,0 +1,1 @@
+const W_CUT_BOUNDS = (lower = 1100, upper = 1400)

@@ -16,5 +16,6 @@ include("./constants/physicalconstants.jl")
 include("./statisticsutils.jl")
 include("./mathutils.jl")
 include("./physicsutils.jl")
+include("./misc.jl")
 
 end

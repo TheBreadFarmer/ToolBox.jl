@@ -1,5 +1,5 @@
 """
-    W_approx(l_in::LorentzVector, l_out::LorentzVector; Mn=0.93891875433, Eb=0.0315)
+    W_approx(l_in::LorentzVector, l_out::LorentzVector; Mn=AVG_NUCLEON_MASS, Eb=BINDING_ENERGY)
 
 Compute the hadronic invariant mass W using the approximation that the nucleon remains at rest.
 
@@ -57,10 +57,29 @@ end
 
 
 """
+    cosbetween(v, u)
+
 Compute cosine of the angle between two vectors.
 """
-function cosbetween(v::LorentzVector,u::LorentzVector)
-    v′ = SpatialVector(v)
-    u′ = SpatialVector(u)
-    return dot(v′, u′) / (norm(v′) * norm(u′))
+function cosbetween(v::SpatialVector,u::SpatialVector)
+    return dot(v, u) / (norm(v) * norm(u))
+end
+cosbetween(v::LorentzVector,u::LorentzVector) = cosbetween(SpatialVector(v),SpatialVector(u))
+
+
+
+
+"""
+    predict_pion_energy(lepton_in, lepton_out_smeared, fs_lead_proton, Mn=NEUTRON_MASS, Eb=BINDING_ENERGY)
+
+Compute predicted pion energy acording to Eπ = (Ee - Ee′) + Mn + Eb - Ep, for this interaction: e + n -> e′ + p + π⁻
+
+The incoming nucleon must be a neutron for the interaction to be valid.
+"""
+function predict_pion_energy(lepton_in, lepton_out_smeared, fs_lead_proton; Mn=NEUTRON_MASS, Eb=BINDING_ENERGY)
+    Ee = energy(lepton_in)
+    Ee′ = energy(lepton_out_smeared)
+    Ep = energy(fs_lead_proton)
+
+    return (Ee - Ee′) + Mn + Eb - Ep
 end

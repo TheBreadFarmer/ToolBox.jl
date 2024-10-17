@@ -9,8 +9,8 @@
 
 Compute the efficiency of selecting signal events from a larger sample for the given cut.
 """
-function efficiency(sample::Vector{Hist1D{T}}, signal_index::Int64,
-                    x1::Number, x2::Number; print_output::Bool=true) where {T}
+function efficiency(sample::Vector{Hist1D{T}}, signal_index::Int,
+                    x1::Real, x2::Real; print_output::Bool=true) where {T}
 
     # get hist of selected signal events, where bounds are restricted by cut.
     restricted_signal_hist = restrict(sample[signal_index], x1, x2)
@@ -40,7 +40,7 @@ end
 
 Compute the purity of selected events from given sample events with respect to given signal events.
 """
-function purity(sample::Vector{Hist1D{T}}, signal_index::Int64, x1::Number, x2::Number;
+function purity(sample::Vector{Hist1D{T}}, signal_index::Int, x1::Real, x2::Real;
                 print_output::Bool=true) where {T}
 
     # get hist of selected signal events, where bounds are restricted by cut.
@@ -74,7 +74,7 @@ end
 
 Compute maximum possible purity of the given sample with respect to the given signal.
 """
-function maxpurity(sample::Vector{Hist1D{T}}, signal_index::Int64;
+function maxpurity(sample::Vector{Hist1D{T}}, signal_index::Int;
                     return_edges::Bool=false, print_output::Bool=true) where {T}
 
     highest_purity_value = 0.0
@@ -120,8 +120,8 @@ end
 
 Returns useful stats regarding cuting a sample by W with respect to a given signal.
 """
-function cut_stats(sample::Vector{Hist1D{T}}, signal_index::Int64,
-                    target_purity::Float64; print_output::Bool=true) where {T}
+function cut_stats(sample::Vector{Hist1D{T}}, signal_index::Int,
+                   target_purity::Real; print_output::Bool=true) where {T}
 
     _max = maxpurity(sample, signal_index; return_edges=false, print_output=false)
 
@@ -149,8 +149,8 @@ end
 """
     best_cut_purity(sample, signal_index, target_purity; print_output)
 """
-function best_cut_purity(sample::Vector{Hist1D{T}}, signal_index::Int64,
-                        target_purity::Float64; print_output::Bool=true) where {T}
+function best_cut_purity(sample::Vector{Hist1D{T}}, signal_index::Int,
+                         target_purity::Real; print_output::Bool=true) where {T}
 
     # define variable for chosen purity.
     chosen_purity = 0

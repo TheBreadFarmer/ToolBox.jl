@@ -21,7 +21,7 @@ See also [`W_exact`](@ref)
 function W_approx(l_in::LorentzVector, l_out::LorentzVector; Mn::Float64=AVG_NUCLEON_MASS, Eb::Float64=BINDING_ENERGY)
     # calculate W using approximation. if the argument of sqrt() is negative, return 0.0 instead.
     # `mass(l_in - l_out)^2` is equivalent to Q^2.
-    W = try sqrt(-mass(l_in - l_out)^2 + 2*(Mn-Eb)*(energy(l_in) - energy(l_out)) + (Mn-Eb)^2) catch; 0.0 end # units of GeV
+    W = try sqrt(-mass(l_in - l_out)^2 + 2*(Mn+Eb)*(energy(l_in) - energy(l_out)) + (Mn+Eb)^2) catch; 0.0 end # units of GeV
 
     return W
 end

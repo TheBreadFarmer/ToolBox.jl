@@ -18,7 +18,7 @@ W = √{ -(-q)² + 2⋅(Mn+Eb)⋅ω + (Mn+Eb)² }
 
 See also [`W_exact`](@ref)
 """
-function W_approx(l_in::Vec4, l_out::Vec4; Mn::Real=AVG_NUCLEON_MASS, Eb::Real=BINDING_ENERGY) #FIXME bad function name
+function W_approx(l_in::LorentzVector, l_out::LorentzVector; Mn::Real=AVG_NUCLEON_MASS, Eb::Real=BINDING_ENERGY) #FIXME bad function name
     # energy transfered
     ω = energy(l_in) - energy(l_out)
     # transfered four-momentum. `mass(l_in - l_out)` is equivalent to Q.

@@ -22,11 +22,14 @@ end
 
 
 """
-    get_particles(codes, pdg, E, px, py, pz)
+    particles(codes, pdg, E, px, py, pz)
 
 Return vector of LVs for particles with `pdg` code equal to any value in `codes`.
+
+# Arguments
+- `codes::`
 """
-function get_particles(codes, pdg, E, px, py, pz)
+function particles(codes, pdg, E, px, py, pz)
     # create empty vector for particles.
     particles = LorentzVector{Float64}[]
 

@@ -1,53 +1,59 @@
 """
-    W_approx(l_in::LorentzVector, l_out::LorentzVector; Mn=AVG_NUCLEON_MASS, Eb=BINDING_ENERGY)
+    W_approx(l_in, l_out; Mn=AVG_NUCLEON_MASS, Eb=BINDING_ENERGY)
 
-Compute the hadronic invariant mass W using the approximation that the nucleon remains at rest.
+Compute approximation of the hadronic invariant mass `W` assuming the struck nucleon is at rest with a correction for binding energy `Eb`.
 
 ```math
-W = √{ -(-q)² + 2⋅(Mn-Eb)⋅ω + (Mn-Eb)² }
- q = l_in - l_out
+W = √{ -(-q)² + 2⋅(Mn+Eb)⋅ω + (Mn+Eb)² }
+ q = (l_in - l_out)
  ω = El_in - El_out
 ```
 
-W is calculated from the incoming lepton `l_in` and the outgoing 
-final state primary lepton `l_out`. 
-It is also assumed that the struck nucleon is at rest when struck. 
-`Mn` is the mass (in GeV) of the struck nucleon as the average between the 
-masses of the neutron and proton reported by PDG. `Eb` is the binding energy term which 
-is the energy (in GeV) required to kick a nucleon out of the nucleus (defaults to 0.0).
+# Arguments
+- `l_in::LorentzVector`: the incoming lepton's 4-momentum.
+- `l_out::LorentzVector`: the primary final-state outgoing lepton's 4-momentum.
+- `Mn::Real=AVG_NUCLEON_MASS`: the mass of the struck nucleon.
+- `Eb::Real=BINDING_ENERGY`: the binding energy of the nucleus.
+
 
 See also [`W_exact`](@ref)
 """
-function W_approx(l_in::LorentzVector, l_out::LorentzVector; Mn::Float64=AVG_NUCLEON_MASS, Eb::Float64=BINDING_ENERGY)
-    # calculate W using approximation. if the argument of sqrt() is negative, return 0.0 instead.
-    # `mass(l_in - l_out)^2` is equivalent to Q^2.
-    W = try sqrt(-mass(l_in - l_out)^2 + 2*(Mn+Eb)*(energy(l_in) - energy(l_out)) + (Mn+Eb)^2) catch; 0.0 end # units of GeV
+function W_approx(l_in::Vec4, l_out::Vec4; Mn::Real=AVG_NUCLEON_MASS, Eb::Real=BINDING_ENERGY) #FIXME bad function name
+    # energy transfered
+    ω = energy(l_in) - energy(l_out)
+    # transfered four-momentum. `mass(l_in - l_out)` is equivalent to Q.
+    Q = mass(l_in - l_out)
+    # struck-nucleon mass term with correction for binding energy.
+    M = Mn+Eb
 
-    return W
+    # hadronic invariant mass squared.
+    W2 = M^2 - Q^2 + 2*M*ω
+
+    # return 0.0 if W2 is negative.
+    return W2 < 0.0 ? 0.0 : sqrt(W2)
 end
-# TODO find Eb calls in code and replace with default value.
+
 
 """
     W_exact(l_in::LorentzVector, l_out::LorentzVector, n_in::LorentzVector)
 
-Compute the hadronic invariant mass W.
+Compute the hadronic invariant mass `W` without approximation.
 
 ```math
 W = √{ -(-q)² + 2( q ⋅ n_in ) + Mn² }
 q = l_in - l_out
 ```
 
-W is calculated from the four-momentum of the incoming lepton `l_in`,
-the outgoing final state primary lepton `l_out`,
-and the struck/incoming nucleon `n_in`.
-This function does not assume that the struck nucleon is at rest.
-The units of the returned value for W will be the same as the units of the argument value.
+# Arguments
+- `l_in::LorentzVector`: the incoming lepton's 4-momentum.
+- `l_out::LorentzVector`: the primary final-state outgoing lepton's 4-momentum.
+- `n_in::LorentzVector`: the struck nucleon.
 
 See also [`W_approx`](@ref)
 """
-function W_exact(l_in::LorentzVector, l_out::LorentzVector, n_in::LorentzVector)
+function W_exact(l_in::LorentzVector, l_out::LorentzVector, n_in::LorentzVector) #TODO make this more readable.
     # calculate W using exact values. `mass(l_in - l_out)^2` is equivalent to Q^2.
-    W = sqrt(-mass(l_in - l_out)^2 + 2*dot((l_in - l_out), n_in) + mass(n_in)^2) # units of GeV
+    W = sqrt(-mass(l_in - l_out)^2 + 2*dot((l_in - l_out), n_in) + mass(n_in)^2)
 
 
     return W

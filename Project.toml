@@ -6,7 +6,6 @@ version = "0.0.3-DEV"
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 FHist = "68837c9b-b678-4cd5-9925-8a54edc8f695"
-GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
 LorentzVectorHEP = "f612022c-142a-473f-8cfd-a09cf3793c6c"
 LorentzVectors = "3f54b04b-17fc-5cd4-9758-90c048d965e3"
 

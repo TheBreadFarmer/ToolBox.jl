@@ -7,7 +7,7 @@ using LorentzVectors, LorentzVectorHEP, FHist
 
 
 export AVG_NUCLEON_MASS, BINDING_ENERGY, NEUTRON_MASS, PROTON_MASS
-export W_CUT_BOUNDS
+export W_CUT_BOUNDS, RESIDUAL_CPI_ENERGY_BOUNDS
 
 include("./constants/generalconstants.jl")
 include("./constants/physicalconstants.jl")
@@ -26,7 +26,7 @@ export smear, get_acceptance
 
 include("./physicsutils.jl")
 
-export w_cut, equalsany, particles, get_lead_particle, reconstruct_particles
+export w_cut, residual_cpi_energy_cut, equalsany, particles, get_lead_particle, reconstruct_particles
 
 include("./misc.jl")
 

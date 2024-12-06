@@ -1,6 +1,9 @@
 module ToolBox
 
-using LorentzVectors, LorentzVectorHEP, GLMakie, FHist, Distributions
+import Distributions: Normal
+
+using LorentzVectors, LorentzVectorHEP, FHist
+
 
 
 export AVG_NUCLEON_MASS, BINDING_ENERGY, NEUTRON_MASS, PROTON_MASS

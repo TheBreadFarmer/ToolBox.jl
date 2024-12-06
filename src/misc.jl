@@ -3,10 +3,22 @@
 """
     w_cut(w; bounds=W_CUT_BOUNDS) -> Bool
 
-Return `true` if hadronic invariant mass `w` is within the bounds (inclusive) specified by `bounds` which default to `W_CUT_BOUNDS`.
+Return `true` if hadronic invariant mass `w` is within the bounds (inclusive) specified by `bounds`.
+
+Values for the hadronic invariant mass `w` that are within the bounds are considered passing.
 """
 function w_cut(w; bounds=W_CUT_BOUNDS)
     return bounds[1] ≤ w ≤ bounds[2]
+end
+
+
+"""
+    residual_cpi_energy_cut(ΔE; bounds=RESIDUAL_CPI_ENERGY_BOUNDS) -> Bool
+
+Return `true` if residual charged-pion energy `ΔE` is within the bounds (inclusive) specified by `bounds`.
+"""
+function residual_cpi_energy_cut(ΔE; bounds=RESIDUAL_CPI_ENERGY_BOUNDS)
+    return bounds[1] ≤ ΔE ≤ bounds[2]
 end
 
 

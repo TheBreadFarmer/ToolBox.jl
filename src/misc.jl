@@ -75,22 +75,51 @@ end
 
 
 """
-    reconstruct_particles(code::Int, pdg, wgt, E, px, py, pz)
+    reconstruct_particles(MCcodes::Vector{Int}, pdg, wgt, E, px, py, pz)
 
-Reconstruct only particles with pdg code equal to code. acording to a given weight.
+Reconstruct only particles of specified MonteCarlo ID code, given its weight passes reconstruction test.
+
+TODO: Further explain the reconsstruction test process.
 """
-function reconstruct_particles(codes, pdg, wgt, E, px, py, pz)
+function reconstruct_particles(MCcodes::Vector{Int}, pdg, wgt, E, px, py, pz)
+    Base.depwarn("Replace call to `reconstruct_particles()` with the two argument 
+    method `reconstruct_particle(MCcodes, event)`!", :reconstruct_particles; force=true)
     # create empty vector for reconstructed particles.
     recoed_particles = LorentzVector{Float64}[]
 
     # get index in pdg code list of each particle equal to code.
-    particle_indices = findall(x->(equalsany(codes, x)), pdg)
+    particle_indices = findall(x->(equalsany(MCcodes, x)), pdg)
 
     # check weight against random number for each element in particle_indices.
     for i in particle_indices
         wgt[i] < rand() && continue # if rand is greater, skip.
         # if wgt was greater, reconstruct particle.
         push!(recoed_particles, LorentzVector(E[i], px[i],py[i],pz[i]))
+    end
+
+    return recoed_particles
+end
+
+"""
+    reconstruct_particles(MCcodes::Vector{Int}, event::LazyEvent)
+
+Reconstruct only particles of specified MonteCarlo ID code, given its weight passes reconstruction test.
+
+TODO: Further explain the reconsstruction test process.
+"""
+function reconstruct_particles(MCcodes::Vector{Int}, event::LazyEvent)
+    # create empty vector for reconstructed particles.
+    recoed_particles = LorentzVector{Float64}[]
+
+    # get index in pdgf code list of each particle equal to a code in MCcodes.
+    particle_indices = findall(x->(equalsany(MCcodes, x)), event.pdgf)
+
+    # check weight against random number for each element in particle_indices.
+    (; wgtf, Ef, pxf, pyf, pzf) = event
+    for i in particle_indices
+        wgtf[i] < rand() && continue # if rand is greater, skip.
+        # if wgtf was greater, reconstruct particle.
+        push!(recoed_particles, LorentzVector(Ef[i],pxf[i],pyf[i],pzf[i]))
     end
 
     return recoed_particles

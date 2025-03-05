@@ -72,6 +72,21 @@ function get_lead_particle(LVs::Vector{LorentzVector{T}}) where T <: Number
     # return LorentzVector from LVs for that index.
     return LVs[i]
 end
+"""
+    get_lead_particle(LVs, weights)
+
+Return particle LV from LVs with highest magnitude.
+"""
+function get_lead_particle(LVs::Vector{LorentzVector{T}}, weights) where T <: Number
+    # compute the momentum of every LV in LVs
+    momenta = LorentzVectorHEP.mag.(LVs)
+
+    # get just the index of the max momentum magnitude.
+    _, i = findmax(momenta)
+
+    # return LorentzVector from LVs for that index.
+    return LVs[i], weights[i]
+end
 
 
 """
@@ -105,11 +120,14 @@ end
 
 Reconstruct only particles of specified MonteCarlo ID code, given its weight passes reconstruction test.
 
-TODO: Further explain the reconsstruction test process.
+Also return the weights for reconstructed particles.
+
+TODO: Further explain the reconstruction test process.
 """
 function reconstruct_particles(MCcodes::Vector{Int}, event::LazyEvent)
     # create empty vector for reconstructed particles.
     recoed_particles = LorentzVector{Float64}[]
+    recoed_weights = Float64[]
 
     # get index in pdgf code list of each particle equal to a code in MCcodes.
     particle_indices = findall(x->(equalsany(MCcodes, x)), event.pdgf)
@@ -120,7 +138,8 @@ function reconstruct_particles(MCcodes::Vector{Int}, event::LazyEvent)
         wgtf[i] < rand() && continue # if rand is greater, skip.
         # if wgtf was greater, reconstruct particle.
         push!(recoed_particles, LorentzVector(Ef[i],pxf[i],pyf[i],pzf[i]))
+        push!(recoed_weights, wgtf[i])
     end
 
-    return recoed_particles
+    return recoed_particles, recoed_weights
 end

@@ -124,7 +124,7 @@ Also return the weights for reconstructed particles.
 
 TODO: Further explain the reconstruction test process.
 """
-function reconstruct_particles(MCcodes::Vector{Int}, event::LazyEvent)
+function reconstruct_particles(MCcodes::Vector{Int}, event)
     # create empty vector for reconstructed particles.
     recoed_particles = LorentzVector{Float64}[]
     recoed_weights = Float64[]
